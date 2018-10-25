@@ -1,4 +1,6 @@
-import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
+//import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
+
+import javafx.stage.FileChooser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.*;
 
 public class EncryptFile extends JFrame {
     public static void main(String[] args) {
@@ -25,9 +28,9 @@ public class EncryptFile extends JFrame {
     private JComboBox jcomb = new JComboBox(algoLabels);
     private JTextField jtf1 = new JTextField();
     private JTextField jtf2 = new JTextField();
-    private JTextField jtfkey = new JTextField("1723");
-    private JButton jbtnload = new JButton("Choose");
-    private JButton jbtnsave = new JButton("Choose");
+    private JTextField jtfkey = new JTextField("");
+    private JButton jbtnload = new JButton("選擇檔案");
+    private JButton jbtnsave = new JButton("保存檔案");
     private JButton jbtnrun = new JButton("Run");
     private JButton jbtnclose = new JButton("Close");
     private JProgressBar jpb = new JProgressBar();
@@ -35,6 +38,8 @@ public class EncryptFile extends JFrame {
     private Timer t1;
     private int val = 0;
     private MainFrame file;
+    private JFileChooser jfc =new JFileChooser();
+    private String loadfilename = "";
 
     public EncryptFile(MainFrame file){
         this.file = file;
@@ -65,22 +70,53 @@ public class EncryptFile extends JFrame {
         jpW.add(jlb2);
         jpC.add(jtf1);
         jpC.add(jtf2);
-        jpE.add(jbtnsave);
         jpE.add(jbtnload);
+        jpE.add(jbtnsave);
         jpS.add(jpb);
+        jbtnload.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jfc.showOpenDialog(EncryptFile.this)==JFileChooser.APPROVE_OPTION){
+                    loadfilename= jfc.getSelectedFile().getPath();
+                    jtf1.setText(jfc.getSelectedFile().getPath());
+                    jtf2.setText(jtf1.getText()+"sec");
+                }
+
+            }
+        });
         jbtnrun.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                t1 =new Timer(500, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                            val =val+10;
-                            jpb.setValue(val);
+                    if (loadfilename.equals("")) {
+                        JOptionPane.showMessageDialog(EncryptFile.this, "No File Selected");
+                    } else {
+                        try {
+                            File SelectFile = new File(loadfilename);
+                            long fileLength = SelectFile.length();
+                            jpb.setMaximum(100);
+                            char key[] = jlbkey.getText().toCharArray();
+                            FileReader fr = new FileReader(SelectFile);
+                            BufferedReader bfr = new BufferedReader(fr);
+                            File writeFile = new File(jtf2.getText());
+                            FileWriter fw = new FileWriter(writeFile);
+                            BufferedWriter bfw = new BufferedWriter(fw);
+                            int data;
+                            int i = 0;
+                            while ((data = bfr.read()) != -1) {
+                                data = data ^ key[i % key.length];
+                                bfw.write(data);
+                                i++;
+                                jpb.setValue(Math.round((float) i / fileLength * 100));
+                            }
+                            fr.close();
+                            bfw.close();
+                         JOptionPane.showMessageDialog(EncryptFile.this, "Finish");
+                    }catch (Exception io2){
+                    JOptionPane.showMessageDialog(EncryptFile.this,"Open File Error:"+io2.toString());
+                }
                     }
-                });
-                t1.start();
             }
         });
+
     }
 }
