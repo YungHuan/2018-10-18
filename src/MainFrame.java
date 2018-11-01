@@ -16,6 +16,7 @@ public class MainFrame extends JFrame{
     private JMenuItem jmOOXX =new JMenuItem("OOXX");
     private JMenuItem jmencrypt =new JMenuItem("Encrypt");
     private JMenuItem jmencryptfile =new JMenuItem("EncryptFile");
+    private JMenuItem jmenDigiralTimer =new JMenuItem("DigiralTimer");
     public MainFrame(){
         init3();
     }
@@ -33,6 +34,7 @@ public class MainFrame extends JFrame{
         jm1.add(jmexit);
         jm2.add(jmencrypt);
         jm2.add(jmencryptfile);
+        jm2.add(jmenDigiralTimer);
         jm3.add(jmOOXX);
         jmexit.addActionListener(new ActionListener() {
             @Override
@@ -61,6 +63,14 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 EncryptFile file =new EncryptFile(MainFrame.this);
                 file.setVisible(true);
+                MainFrame.this.setVisible(false);
+            }
+        });
+        jmenDigiralTimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DigiralTimer dt =new DigiralTimer(MainFrame.this);
+                dt.setVisible(true);
                 MainFrame.this.setVisible(false);
             }
         });
