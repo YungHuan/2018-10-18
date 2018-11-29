@@ -16,6 +16,7 @@ public class MainFrame extends JFrame{
     private JMenuItem jmOOXX =new JMenuItem("OOXX");
     private JMenuItem jmPokemon =new JMenuItem("Pokemon");
     private JMenuItem jmkeymove =new JMenuItem("Keymove");
+    private JMenuItem jmclient =new JMenuItem("Client");
     private JMenuItem jmencrypt =new JMenuItem("Encrypt");
     private JMenuItem jmencryptfile =new JMenuItem("EncryptFile");
     private JMenuItem jmenDigiralTimer =new JMenuItem("DigiralTimer");
@@ -40,6 +41,7 @@ public class MainFrame extends JFrame{
         jm3.add(jmOOXX);
         jm3.add(jmPokemon);
         jm3.add(jmkeymove);
+        jm3.add(jmclient);
         jmexit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,6 +93,14 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 Keymove keymo =new Keymove(MainFrame.this);
                 keymo.setVisible(true);
+                MainFrame.this.setVisible(false);
+            }
+        });
+        jmclient.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Client cli =new Client(MainFrame.this);
+                cli.setVisible(true);
                 MainFrame.this.setVisible(false);
             }
         });
